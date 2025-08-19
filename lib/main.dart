@@ -2,19 +2,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:device_preview/device_preview.dart';
+// DevicePreview ke imports hata diye gaye hain
 import 'package:my_portfolio/core/theme/app_theme.dart';
 import 'package:my_portfolio/views/home/portfolio_page.dart';
 
-void main() {
-  runApp(
-    ProviderScope(
-      child: DevicePreview(
-        enabled: false, // Disable in release build if you want
-        builder: (context) => const MyApp(),
-      ),
-    ),
-  );
+// main function ko web-safe banayein
+void main() async {
+  // Ye line web par behtar performance ke liye zaroori hai
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Ab hum seedha ProviderScope aur MyApp ko run karenge
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -22,6 +20,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Is code ko yahan rakhna theek hai, lekin behtar practice ye hai
+    // ki isko main() mein rakha jaye. Abhi ke liye koi masla nahi.
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -36,9 +36,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
       home: const PortfolioPage(),
-      // DevicePreview integration
-      builder: DevicePreview.appBuilder,
-      locale: DevicePreview.locale(context),
+      // DevicePreview ke builder aur locale hata diye gaye hain
     );
   }
 }
