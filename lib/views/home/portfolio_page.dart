@@ -1,13 +1,12 @@
-// features/portfolio/presentation/pages/portfolio_page.dart
 import 'package:flutter/material.dart';
-import '../../views/home/widgets/animated_background.dart';
-import '../../views/home/widgets/custom_app_bar.dart';
-import '../../views/home/widgets/hero_section.dart';
-import '../skills/skill_section.dart';
-import '../projects/projects_section.dart';
-import '../contact/contact_section.dart';
-import '../contact/widgets/footer_section.dart';
-import '../experience/experience_section.dart';
+import 'widgets/animated_background.dart';
+import 'widgets/custom_app_bar.dart';
+import 'widgets/hero_section.dart';
+import '../../views/skills/skill_section.dart';
+import '../../views/projects/projects_section.dart';
+import '../../views/contact/contact_section.dart';
+import '../../views/contact/widgets/footer_section.dart';
+import '../../views/experience/experience_section.dart';
 
 class PortfolioPage extends StatefulWidget {
   const PortfolioPage({super.key});
@@ -39,6 +38,9 @@ class _PortfolioPageState extends State<PortfolioPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Screen ki height yahan le lein
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -47,7 +49,12 @@ class _PortfolioPageState extends State<PortfolioPage> {
             controller: _scrollController,
             child: Column(
               children: [
-                HeroSection(key: _sectionKeys[0]),
+                // ===== YEH HAI ASLI FIX =====
+                // HeroSection ko ek fixed height de di gayi hai
+                SizedBox(
+                  height: screenHeight,
+                  child: HeroSection(key: _sectionKeys[0]),
+                ),
                 SkillSection(key: _sectionKeys[1]),
                 ProjectsSection(key: _sectionKeys[2]),
                 ExperienceSection(key: _sectionKeys[3]),
