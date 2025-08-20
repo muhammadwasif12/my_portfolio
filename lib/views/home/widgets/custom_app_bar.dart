@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:my_portfolio/core/theme/app_theme.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-
 class CustomAppBar extends StatefulWidget {
   final Function(int) onNavigate;
 
-  const CustomAppBar({super.key, required this.onNavigate}) ;
+  const CustomAppBar({super.key, required this.onNavigate});
 
   @override
   State<CustomAppBar> createState() => _CustomAppBarState();
@@ -15,45 +14,41 @@ class CustomAppBar extends StatefulWidget {
 class _CustomAppBarState extends State<CustomAppBar>
     with TickerProviderStateMixin {
   bool _isScrolled = false;
-  late ScrollController _scrollController;
+  // ScrollController ab PortfolioPage se manage hoga, yahan iski zaroorat nahi
+  // late ScrollController _scrollController; 
   late AnimationController _slideController;
   late AnimationController _pulseController;
   late AnimationController _glowController;
   late AnimationController _logoController;
-  
+
   late Animation<Offset> _slideAnimation;
   late Animation<double> _pulseAnimation;
   late Animation<double> _glowAnimation;
   late Animation<double> _logoRotation;
-  
+
   int _hoveredIndex = -1;
   int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
-    _scrollController.addListener(_onScroll);
-    
-    // Slide-in animation for app bar
+    // ScrollController yahan se hata diya gaya hai
+    // _scrollController = ScrollController();
+    // _scrollController.addListener(_onScroll);
+
+    // ... baaki saare animation controllers bilkul waise hi rahenge ...
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
-    // Pulse animation for nav items
     _pulseController = AnimationController(
       duration: const Duration(milliseconds: 2000),
       vsync: this,
     );
-    
-    // Glow effect animation
     _glowController = AnimationController(
       duration: const Duration(milliseconds: 3000),
       vsync: this,
     );
-    
-    // Logo rotation animation
     _logoController = AnimationController(
       duration: const Duration(milliseconds: 15000),
       vsync: this,
@@ -91,42 +86,38 @@ class _CustomAppBarState extends State<CustomAppBar>
       curve: Curves.linear,
     ));
 
-    // Start animations
     _slideController.forward();
     _pulseController.repeat(reverse: true);
     _glowController.repeat(reverse: true);
     _logoController.repeat();
   }
 
-  void _onScroll() {
-    if (_scrollController.offset > 50 && !_isScrolled) {
-      setState(() => _isScrolled = true);
-    } else if (_scrollController.offset <= 50 && _isScrolled) {
-      setState(() => _isScrolled = false);
-    }
-  }
+  // _onScroll method ki ab yahan zaroorat nahi
+  // void _onScroll() { ... }
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 768;
     final isTablet = screenWidth >= 768 && screenWidth < 1024;
-    
-    return SlideTransition(
-      position: _slideAnimation,
-      child: Positioned(
-        top: 0,
-        left: 0,
-        right: 0,
+
+    // =======================================================================
+    // ===== YEH HAI ASLI FIX: Positioned ko bahar aur SlideTransition ko andar =====
+    // =======================================================================
+    return Positioned(
+      top: 0,
+      left: 0,
+      right: 0,
+      child: SlideTransition(
+        position: _slideAnimation,
         child: AnimatedBuilder(
           animation: Listenable.merge([_glowController, _logoController]),
           builder: (context, child) {
             return AnimatedContainer(
               duration: const Duration(milliseconds: 400),
-              // Significantly reduced padding for smaller height
               padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 16 : 24, 
-                vertical: isMobile ? 4 : 6, // Reduced from 8/12 to 4/6
+                horizontal: isMobile ? 16 : 24,
+                vertical: isMobile ? 4 : 6,
               ),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -175,6 +166,9 @@ class _CustomAppBarState extends State<CustomAppBar>
     );
   }
 
+  // ... baaki saare helper methods (_buildAnimatedLogo, _buildNavigationItems, etc.) bilkul waise hi rahenge ...
+  // Unmein koi change karne ki zaroorat nahi hai.
+  // ... (Paste your existing helper methods here) ...
   Widget _buildAnimatedLogo(bool isMobile) {
     return AnimatedBuilder(
       animation: Listenable.merge([_logoRotation, _glowAnimation]),
@@ -440,9 +434,10 @@ class _CustomAppBarState extends State<CustomAppBar>
     );
   }
 
+
   @override
   void dispose() {
-    _scrollController.dispose();
+    // _scrollController.dispose(); // Hata diya gaya
     _slideController.dispose();
     _pulseController.dispose();
     _glowController.dispose();
@@ -450,4 +445,3 @@ class _CustomAppBarState extends State<CustomAppBar>
     super.dispose();
   }
 }
-
